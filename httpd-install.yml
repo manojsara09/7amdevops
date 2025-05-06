@@ -1,0 +1,26 @@
+---
+- name: demo on using variable and modules
+  hosts: all
+  vars_prompt:
+    - name: pkg
+      prompt: What package to be installed?
+      private: no
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      name: "{{ pkg }}"
+      state: latest
+    notify:
+    - restart apache
+    
+  - name: start the services
+    service:
+        name: httpd
+        state: restarted
+
+  handlers:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+
